@@ -2,24 +2,26 @@ CC = cc
 CFLAGS =-Wall -Wextra -Werror
 NAME = pipex.a
 P_NAME = pipex
-FILES = pipex.c pipex_utils.c
+SOURCE_FILES = source/split.c source/strlen.c source/strnstr.c source/strjoin.c \
+				source/strncmp.c source/strchr.c source/strdup.c source/putstr_fd.c
+FILES = pipex.c pipex_utils.c get_here_doc.c errors_and_free.c \
+		fork_child_proc_to_exec_cmd.c
 
+SOURCE_OBJ = $(SOURCE_FILES:%.c=%.o)
 OBJ = $(FILES:%.c=%.o)
 
-all: creat
-	$(CC) $(CFLAGS) main.c $(NAME) libft/libft.a -o $(P_NAME)
+all: $(NAME)
+	$(CC) $(CFLAGS) main.c $(NAME) -o $(P_NAME)
 
-creat: compile_libft $(OBJ)
-	ar rcs $(NAME) $(OBJ)
+$(NAME): creat
 
-compile_libft:
-	cd libft && make all
+creat: $(SOURCE_OBJ) $(OBJ)
+	ar rcs $(NAME) $(SOURCE_OBJ) $(OBJ)
 
 fclean: clean
-	cd libft && make fclean
 	rm -rf  $(NAME) $(P_NAME)
+
 clean:
-	cd libft && make clean
-	rm -rf $(OBJ)
+	rm -rf $(SOURCE_OBJ) $(OBJ)
 
 re: fclean all

@@ -1,6 +1,6 @@
-#include "libft.h"
+#include "source.h"
 
-void ft_putstr_fd(char *s, int fd)
+void ft_putstr_fd(char const *s, int fd)
 {
     if (! s)
         return;

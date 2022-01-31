@@ -1,58 +1,13 @@
 #include "pipex.h"
 
-void ft_free_2_2D_1D_pointers(char *ptr_2D_1[], char *ptr_2D_2[], char *ptr)
+static int ft_read_from_write_to(int infd, int outfd)
 {
-    int i;
-
-    i = 0;
-    if (ptr_2D_1)
-    {
-        while (ptr_2D_1[i])
-            free(ptr_2D_1[i++]);
-        free(ptr_2D_1);
-    }
-
-    i = 0;
-    if (ptr_2D_2)
-    {
-        while (ptr_2D_2[i])
-            free(ptr_2D_2[i++]);
-        free(ptr_2D_2);
-    }
-    if (ptr)
-        free(ptr);
-}
-
-void ft_put_perror_exit(char const *str, int ext)
-{
-    if (str)
-        perror(str);
-    if (ext)
-        exit(ext);
-}
-
-void ft_put_custom_error_exit(char const *s1, char const *s2, int ext)
-{
-    if (s1)
-    	ft_putstr_fd((char *)s1, 2);
-    if (s2)
-	    ft_putstr_fd((char *)s2, 2);
-    if (s1 || s2)
-    {
-        write(2, "\n", 1);
-    }
-    if (ext)
-    	exit(ext);
-}
-
-int ft_read_from_write_to(int infd, int outfd)
-{
-    char    buff[101];
+    char    buff[11];
     int     read_size;
 
     while (1)
     {
-        read_size = read(infd, buff, 100);
+        read_size = read(infd, buff, 10);
         if (read_size < 0)
             return (-1);
 
@@ -63,4 +18,48 @@ int ft_read_from_write_to(int infd, int outfd)
         ft_putstr_fd(buff, outfd);
     }
     return (0);
+}
+
+void ft_pipex_multiple_pipes(int args_count, char const **args, char **paths)
+{
+	int		fd_outfile;
+	int		fd_read;
+	int 	index;
+
+	index = 0;
+	fd_read = open(args[index], O_RDONLY);
+	if (fd_read < 0)
+		ft_free_perror_exit(paths, NULL, NULL, args[index]);
+
+	while (++index < args_count - 1)
+		fd_read = ft_fork_child_proc_to_exec_cmd(args[index], paths, fd_read);
+
+	fd_outfile = open(args[index], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	if (fd_outfile < 0)
+		ft_free_perror_exit(paths, NULL, NULL, args[index]);
+
+	if (ft_read_from_write_to(fd_read, fd_outfile) < 0)
+		ft_free_perror_exit(paths, NULL, NULL, READ_ERROR);
+}
+
+void ft_pipex_here_doc(int args_count, char const **args, char **paths)
+{
+	int		fd_outfile;
+	int		fd_read;
+	int 	index;
+
+	index = 0;
+	fd_read = ft_get_here_doc(args[index]);
+	if (fd_read < 0)
+		ft_free_perror_exit(paths, NULL, NULL, "heredoc");
+
+	while (++index < args_count - 1)
+		fd_read = ft_fork_child_proc_to_exec_cmd(args[index], paths, fd_read);
+
+	fd_outfile = open(args[index], O_WRONLY | O_APPEND | O_CREAT , 0644);
+	if (fd_outfile < 0)
+		ft_free_perror_exit(paths, NULL, NULL, args[index]);
+
+	if (ft_read_from_write_to(fd_read, fd_outfile) < 0)
+		ft_free_perror_exit(paths, NULL, NULL, READ_ERROR);
 }

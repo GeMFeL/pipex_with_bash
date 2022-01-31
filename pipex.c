@@ -1,112 +1,47 @@
 #include "pipex.h"
 
-static char *ft_get_cmd_full_path(char *paths[], char const *cmd)
+static char *ft_get_trimed_PATH_from_envp(char const *envp[])
 {
-	char 	*path_slash;
-    char 	*cmd_full_path;
-    int   	i;
+	int 	i;
 
-    i = 0;
-	if (! cmd)
-		return (NULL);
-	if (ft_strchr(cmd, '/'))
-		return (ft_strdup(cmd));
-
-    while (paths[i])
-    {
-		path_slash = ft_strjoin(paths[i], "/");
-        cmd_full_path = ft_strjoin(path_slash, cmd);
-		free(path_slash);
-        if (access(cmd_full_path, F_OK) == 0)
-            return (cmd_full_path);
-        free(cmd_full_path);
-        i++;
-    }
-    ft_put_custom_error_exit("pipex: command not found: ", cmd, 0);
+	i = 0;
+	while (envp && envp[i])
+	{
+		if (ft_strnstr(envp[i], "PATH=", 5))
+			return ((char *)envp[i] + 5); // +5 is for trim 'PATH=' string from beguining.
+		i++;
+	}
 	return (NULL);
 }
 
-static void	ft_exec_cmd(char const *cmd, char *args[], int infd, int outfd)
+static char **ft_get_splited_PATH_env(char const *envp[])
 {
-	char 	*envp[1];
+	char 	*path_env;
+	char	**paths;
 
-	envp[0] = NULL;
-	if (dup2(infd, 0) < 0 || dup2(outfd, 1) < 0)
-		ft_put_perror_exit("dup2()", 5);
-
-	if (cmd)
+	path_env = ft_get_trimed_PATH_from_envp(envp);
+	paths = ft_split(path_env, ':');
+	if (! paths)
 	{
-		if (execve(cmd, args, envp) < 0)
-			ft_put_perror_exit(cmd, 5);
+		perror(MALLOC_ERROR);
+		exit(EXIT_FAILURE);
 	}
-	else
-		exit(5);
+	return (paths);
 }
 
-static int ft_fork_child_proc(char const *cmd, char *paths[], int infd)
+void ft_pipex(int argc, char const **argv, char const **envp)
 {
-	char 	**cmd_and_args;
-	char 	*cmd_full_path;
-	pid_t 	pid;
-	int 	fd_pipe[2];
+	char	**paths;
 
-	if (pipe(fd_pipe) < 0)
-	{
-		ft_free_2_2D_1D_pointers(paths, NULL, NULL);
-		ft_put_perror_exit("pipe()", 5);
-	}
-	cmd_and_args = ft_split(cmd, ' ');
-	if (! cmd_and_args)
-		ft_put_perror_exit("malloc()", 9);
-	if (! cmd_and_args[0])
-		ft_put_custom_error_exit(cmd, ": invalid command", 0);
+	if (argc < 5)
+		exit (EXIT_FAILURE);
+	paths = ft_get_splited_PATH_env(envp);
 
-	cmd_full_path = ft_get_cmd_full_path(paths, cmd_and_args[0]);
-	pid = fork();
-	if (pid < 0)
-	{
-		ft_free_2_2D_1D_pointers(paths, cmd_and_args, cmd_full_path);
-		ft_put_perror_exit("fork()", 5);
-	}
-	if (! pid)
-		ft_exec_cmd(cmd_full_path, cmd_and_args, infd, fd_pipe[1]);
+	if (argc == 6 && ! ft_strncmp(argv[1], "here_doc", 9))
+		ft_pipex_here_doc(argc - 2, argv + 2, paths);
 	else
-	{
-		wait(NULL);
-		close(fd_pipe[1]);
-		close(infd);
-		ft_free_2_2D_1D_pointers(NULL, cmd_and_args, cmd_full_path);
-	}
-	return (fd_pipe[0]);
-}
+		ft_pipex_multiple_pipes(argc - 1, argv + 1, paths);
 
-void ft_pipex(int args_count, char const *args[], char *paths[])
-{
-	int		fd_outfile;
-	int		fd_read;
-	int 	index;
-
-	index = 0;
-	fd_read = open(args[index], O_RDONLY);
-	if (fd_read < 0)
-	{
-		ft_free_2_2D_1D_pointers(paths, NULL, NULL);
-		ft_put_perror_exit(args[index], 5);
-	}
-
-	while (++index < args_count - 1)
-		fd_read = ft_fork_child_proc(args[index], paths, fd_read);
-
-	fd_outfile = open(args[index], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd_outfile < 0)
-	{
-		ft_free_2_2D_1D_pointers(paths, NULL, NULL);
-		ft_put_perror_exit(args[index], 1);
-	}
-
-	if (ft_read_from_write_to(fd_read, fd_outfile) < 0)
-	{
-		ft_free_2_2D_1D_pointers(paths, NULL, NULL);
-        ft_put_perror_exit("read()", 1);
-	}
+	ft_free_2D_pointer(paths);
+    waitpid(-1, NULL, 0);
 }
