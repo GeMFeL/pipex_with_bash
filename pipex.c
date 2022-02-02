@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/01 11:25:28 by jchakir           #+#    #+#             */
+/*   Updated: 2022/02/02 10:40:48 by jchakir          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
 static char *ft_get_trimed_PATH_from_envp(char const *envp[])
@@ -43,5 +55,5 @@ void ft_pipex(int argc, char const **argv, char const **envp)
 		ft_pipex_multiple_pipes(argc - 1, argv + 1, paths);
 
 	ft_free_2D_pointer(paths);
-    waitpid(-1, NULL, 0);
+    // waitpid(-1, NULL, 0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   strlen.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jchakir <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 10:13:25 by jchakir           #+#    #+#             */
-/*   Updated: 2021/11/05 10:13:38 by jchakir          ###   ########.fr       */
+/*   Updated: 2022/02/01 18:34:31 by jchakir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ size_t  ft_strlen(const char *s)
 {
     size_t  l;
 
-    l = 0;
     if (! s)
         return (0);
+    l = 0;
     while (*s++)
         l++;
     return (l);

@@ -1,4 +1,35 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fork_child_proc_to_exec_cmd.c                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/01 11:25:06 by jchakir           #+#    #+#             */
+/*   Updated: 2022/02/02 10:54:27 by jchakir          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
+
+static char	**ft_get_grep_args(char const *cmd)
+{
+	char	**cmd_and_args;
+
+	cmd_and_args = malloc(3 * sizeof(char *));
+	if (! cmd_and_args)
+		return (NULL);
+	cmd_and_args[0] = ft_strdup("grep");
+	cmd += 4;
+	while (*cmd == ' ')
+		cmd++;
+	if (! *cmd)
+		cmd_and_args[1] = NULL;
+	else
+		cmd_and_args[1] = ft_strdup(cmd);
+	cmd_and_args[2] = NULL;
+	return cmd_and_args;
+}
 
 static char *ft_get_cmd_full_path(char *paths[], char const *cmd)
 {
@@ -33,8 +64,6 @@ static void	ft_exec_cmd(char const *cmd_path, char *args[], int infd, int outfd)
 	char 	*envp[1];
 
 	envp[0] = NULL;
-	// (void)infd;
-	// (void)outfd;
 	if (dup2(infd, 0) < 0 || dup2(outfd, 1) < 0)
 	{
 		perror(DUP2_ERROR);
@@ -61,7 +90,10 @@ int ft_fork_child_proc_to_exec_cmd(char const *cmd, char *paths[], int infd)
 
 	if (pipe(fd_pipe) < 0)
 		ft_free_perror_exit(paths, NULL, NULL, PIPE_ERROR);
-	cmd_and_args = ft_split(cmd, ' ');
+	if (! ft_strncmp(cmd, "grep", 5) || ! ft_strncmp(cmd, "grep ", 5))
+		cmd_and_args = ft_get_grep_args(cmd);
+	else
+		cmd_and_args = ft_split(cmd, ' ');
 	if (! cmd_and_args)
 		ft_free_perror_exit(paths, NULL, NULL, MALLOC_ERROR);
 	cmd_full_path = ft_get_cmd_full_path(paths, cmd_and_args[0]);
@@ -70,14 +102,10 @@ int ft_fork_child_proc_to_exec_cmd(char const *cmd, char *paths[], int infd)
 		ft_free_perror_exit(paths, cmd_and_args, cmd_full_path, FORK_ERROR);
 	if (! pid)
 		ft_exec_cmd(cmd_full_path, cmd_and_args, infd, fd_pipe[1]);
-	else
-	{
-		if (waitpid(pid, NULL, WNOHANG) < 0)
-			ft_free_perror_exit(paths, cmd_and_args, cmd_full_path, WAITPID_ERROR);
-		close(fd_pipe[1]);
-		close(infd);
-		ft_free_2D_pointer(cmd_and_args);
-		free(cmd_full_path);
-	}
+	waitpid(pid, NULL, 0);
+	close(fd_pipe[1]);
+	close(infd);
+	ft_free_2D_pointer(cmd_and_args);
+	free(cmd_full_path);
 	return (fd_pipe[0]);
 }
