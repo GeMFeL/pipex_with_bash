@@ -6,7 +6,7 @@
 /*   By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 11:24:52 by jchakir           #+#    #+#             */
-/*   Updated: 2022/02/01 17:25:43 by jchakir          ###   ########.fr       */
+/*   Updated: 2022/02/02 12:56:43 by jchakir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-    if (! n || s1 || s2)
+    if (!n || !s1 || !s2)
         return (0);
     while (*s1 && *s2 && *s1 == *s2 && --n)
 		{

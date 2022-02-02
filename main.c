@@ -6,14 +6,14 @@
 /*   By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 11:25:16 by jchakir           #+#    #+#             */
-/*   Updated: 2022/02/01 11:25:17 by jchakir          ###   ########.fr       */
+/*   Updated: 2022/02/02 11:13:21 by jchakir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int main(int argc, char const *argv[], char const *envp[])
+int main(int argc, char const *argv[])
 {
-	ft_pipex(argc, argv, envp);
+	ft_pipex(argc, argv);
 	return (0);
 }
