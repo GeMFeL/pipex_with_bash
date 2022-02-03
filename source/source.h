@@ -6,12 +6,12 @@
 /*   By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 11:24:07 by jchakir           #+#    #+#             */
-/*   Updated: 2022/02/02 16:57:22 by jchakir          ###   ########.fr       */
+/*   Updated: 2022/02/02 17:19:28 by jchakir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#ifndef SOURCE_H
+# define SOURCE_H
 
 # include <stdlib.h>
 # include <unistd.h>

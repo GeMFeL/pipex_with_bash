@@ -6,20 +6,20 @@
 /*   By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 10:13:25 by jchakir           #+#    #+#             */
-/*   Updated: 2022/02/01 18:34:31 by jchakir          ###   ########.fr       */
+/*   Updated: 2022/02/02 17:30:00 by jchakir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "source.h"
 
-size_t  ft_strlen(const char *s)
+size_t	ft_strlen(const char *s)
 {
-    size_t  l;
+	size_t	l;
 
-    if (! s)
-        return (0);
-    l = 0;
-    while (*s++)
-        l++;
-    return (l);
+	if (! s)
+		return (0);
+	l = 0;
+	while (*s++)
+		l++;
+	return (l);
 }

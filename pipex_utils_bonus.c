@@ -6,7 +6,7 @@
 /*   By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 11:25:23 by jchakir           #+#    #+#             */
-/*   Updated: 2022/02/03 16:55:01 by jchakir          ###   ########.fr       */
+/*   Updated: 2022/02/02 17:48:22 by jchakir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,25 @@ void	ft_pipex_multiple_pipes(int args_count, char const **args)
 	while (++index < args_count - 1)
 		fd_read = ft_fork_child_proc_to_exec_cmd(args[index], fd_read);
 	fd_outfile = open(args[index], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	if (fd_outfile < 0)
+		ft_perror_then_exit(args[index]);
+	if (ft_read_from_write_to(fd_read, fd_outfile) < 0)
+		ft_perror_then_exit(READ_ERROR);
+}
+
+void	ft_pipex_here_doc(int args_count, char const **args)
+{
+	int	fd_outfile;
+	int	fd_read;
+	int	index;
+
+	index = 0;
+	fd_read = ft_get_here_doc(args[index]);
+	if (fd_read < 0)
+		ft_perror_then_exit("heredoc");
+	while (++index < args_count - 1)
+		fd_read = ft_fork_child_proc_to_exec_cmd(args[index], fd_read);
+	fd_outfile = open(args[index], O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (fd_outfile < 0)
 		ft_perror_then_exit(args[index]);
 	if (ft_read_from_write_to(fd_read, fd_outfile) < 0)

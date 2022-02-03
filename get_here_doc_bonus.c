@@ -6,29 +6,28 @@
 /*   By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 11:25:13 by jchakir           #+#    #+#             */
-/*   Updated: 2022/02/01 11:25:14 by jchakir          ###   ########.fr       */
+/*   Updated: 2022/02/02 17:41:33 by jchakir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-
-static char *ft_gunl_strjoin(char const *s1, char const *s2)
+static char	*ft_gunl_strjoin(char const *s1, char const *s2)
 {
-    char *str;
-    char *save_str;
+	char	*str;
+	char	*save_str;
 
-    if (! s1)
-        s1 = "";
-    str = malloc(ft_strlen(s1) + 2);
-    if (! str)
-        return (NULL);
-    save_str = str;
-    while (*s1)
-        *str++ = *s1++;
-    *str++ = *s2;
-    *str = 0;
-    return (save_str);
+	if (! s1)
+		s1 = "";
+	str = malloc(ft_strlen(s1) + 2);
+	if (! str)
+		return (NULL);
+	save_str = str;
+	while (*s1)
+		*str++ = *s1++;
+	*str++ = *s2;
+	*str = 0;
+	return (save_str);
 }
 
 static char	*ft_get_until_new_line(void)
@@ -55,9 +54,9 @@ static char	*ft_get_until_new_line(void)
 	return (str);
 }
 
-static void ft_get_here_doc_with_gunl(char *limiter, int outfd)
+static void	ft_get_here_doc_with_gunl(char *limiter, int outfd)
 {
-    char *line;
+	char	*line;
 
 	limiter = ft_strjoin(limiter, "\n");
 	if (! limiter)
@@ -78,23 +77,19 @@ static void ft_get_here_doc_with_gunl(char *limiter, int outfd)
 	exit (1);
 }
 
-int ft_get_here_doc(char const *limiter)
+int	ft_get_here_doc(char const *limiter)
 {
-    int fd_pipe[2];
-    pid_t pid;
+	int		fd_pipe[2];
+	pid_t	pid;
 
 	if (pipe(fd_pipe) < 0)
-		return -1;
+		return (-1);
 	pid = fork();
 	if (pid < 0)
-		return -1;
+		return (-1);
 	if (! pid)
 		ft_get_here_doc_with_gunl((char *)limiter, fd_pipe[1]);
-	else
-	{
-		wait(NULL);
-		// waitpid(pid, NULL, 0);
-		close(fd_pipe[1]);
-	}
+	waitpid(pid, NULL, 0);
+	close(fd_pipe[1]);
 	return (fd_pipe[0]);
 }

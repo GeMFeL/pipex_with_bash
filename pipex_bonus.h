@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 11:25:33 by jchakir           #+#    #+#             */
-/*   Updated: 2022/02/03 17:15:41 by jchakir          ###   ########.fr       */
+/*   Updated: 2022/02/02 18:51:10 by jchakir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
 
 # include "source/source.h"
 # include <fcntl.h>
@@ -29,6 +29,7 @@
 # define WRITE_ERROR "error write()"
 # define OPEN_ERROR "error open()"
 # define READ_OR_WRITE_ERROR "error read()/write()"
+# define COMMAND_NOT_FOUND_ERROR "pipex: command not found: "
 
 void	ft_put_custom_error(char const *s1, char const *s2);
 void	ft_free_perror_exit(char **ptr2D, char const *error_str);
