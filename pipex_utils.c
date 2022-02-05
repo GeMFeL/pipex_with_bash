@@ -6,7 +6,7 @@
 /*   By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 11:25:23 by jchakir           #+#    #+#             */
-/*   Updated: 2022/02/03 16:55:01 by jchakir          ###   ########.fr       */
+/*   Updated: 2022/02/05 13:41:20 by jchakir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	ft_read_from_write_to(int infd, int outfd)
 	return (0);
 }
 
-void	ft_pipex_multiple_pipes(int args_count, char const **args)
+void	ft_pipex_multiple_pipes(int args_count, char **args, char **envp)
 {
 	int	fd_outfile;
 	int	fd_read;
@@ -41,7 +41,7 @@ void	ft_pipex_multiple_pipes(int args_count, char const **args)
 	if (fd_read < 0)
 		ft_perror_then_exit(args[index]);
 	while (++index < args_count - 1)
-		fd_read = ft_fork_child_proc_to_exec_cmd(args[index], fd_read);
+		fd_read = ft_fork_child_proc_to_exec_cmd(envp, args[index], fd_read);
 	fd_outfile = open(args[index], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (fd_outfile < 0)
 		ft_perror_then_exit(args[index]);

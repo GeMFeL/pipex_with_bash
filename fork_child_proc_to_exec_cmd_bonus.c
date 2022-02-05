@@ -1,37 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fork_child_proc_to_exec_cmd.c                      :+:      :+:    :+:   */
+/*   fork_child_proc_to_exec_cmd_bonus.c                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 11:25:06 by jchakir           #+#    #+#             */
-/*   Updated: 2022/02/02 17:37:11 by jchakir          ###   ########.fr       */
+/*   Updated: 2022/02/05 14:06:36 by jchakir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
-static void	ft_exec_cmd(char **bash_args_and_cmd, int infd, int outfd)
+static void	ft_exec_cmd(char **envp, char **bash_and_cmd, int infd, int outfd)
 {
-	char	*envp[1];
 	char	*bash_path;
 
 	bash_path = "/bin/bash";
-	envp[0] = NULL;
 	if (dup2(infd, 0) < 0 || dup2(outfd, 1) < 0)
 	{
 		perror(DUP2_ERROR);
 		exit (EXIT_FAILURE);
 	}
-	if (execve(bash_path, bash_args_and_cmd, envp) < 0)
+	if (execve(bash_path, bash_and_cmd, envp) < 0)
 	{
 		perror(bash_path);
 		exit (EXIT_FAILURE);
 	}
 }
 
-int	ft_fork_child_proc_to_exec_cmd(char const *cmd, int infd)
+int	ft_fork_child_proc_to_exec_cmd(char **envp, char *cmd, int infd)
 {
 	pid_t	pid;
 	int		fd_pipe[2];
@@ -50,7 +48,7 @@ int	ft_fork_child_proc_to_exec_cmd(char const *cmd, int infd)
 	if (pid < 0)
 		ft_free_perror_exit(bash_args_and_cmd, FORK_ERROR);
 	if (! pid)
-		ft_exec_cmd(bash_args_and_cmd, infd, fd_pipe[1]);
+		ft_exec_cmd(envp, bash_args_and_cmd, infd, fd_pipe[1]);
 	waitpid(pid, NULL, 0);
 	close(fd_pipe[1]);
 	close(infd);

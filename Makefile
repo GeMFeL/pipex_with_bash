@@ -6,7 +6,7 @@
 #    By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/01 14:32:52 by jchakir           #+#    #+#              #
-#    Updated: 2022/02/03 17:18:29 by jchakir          ###   ########.fr        #
+#    Updated: 2022/02/05 14:10:37 by jchakir          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,4 +48,3 @@ clean:
 
 re: fclean all
 
-# .PHONY: all $(NAME) bonus $(BONUS_NAME) fclean clean re

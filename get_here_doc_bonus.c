@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_here_doc.c                                     :+:      :+:    :+:   */
+/*   get_here_doc_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 11:25:13 by jchakir           #+#    #+#             */
-/*   Updated: 2022/02/02 17:41:33 by jchakir          ###   ########.fr       */
+/*   Updated: 2022/02/05 14:02:52 by jchakir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 static char	*ft_gunl_strjoin(char const *s1, char const *s2)
 {
@@ -77,7 +77,7 @@ static void	ft_get_here_doc_with_gunl(char *limiter, int outfd)
 	exit (1);
 }
 
-int	ft_get_here_doc(char const *limiter)
+int	ft_get_here_doc(char *limiter)
 {
 	int		fd_pipe[2];
 	pid_t	pid;
@@ -88,7 +88,7 @@ int	ft_get_here_doc(char const *limiter)
 	if (pid < 0)
 		return (-1);
 	if (! pid)
-		ft_get_here_doc_with_gunl((char *)limiter, fd_pipe[1]);
+		ft_get_here_doc_with_gunl(limiter, fd_pipe[1]);
 	waitpid(pid, NULL, 0);
 	close(fd_pipe[1]);
 	return (fd_pipe[0]);

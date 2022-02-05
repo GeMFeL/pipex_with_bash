@@ -6,7 +6,7 @@
 /*   By: jchakir <jchakir@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 11:25:33 by jchakir           #+#    #+#             */
-/*   Updated: 2022/02/02 18:51:10 by jchakir          ###   ########.fr       */
+/*   Updated: 2022/02/05 14:03:21 by jchakir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@
 void	ft_put_custom_error(char const *s1, char const *s2);
 void	ft_free_perror_exit(char **ptr2D, char const *error_str);
 void	ft_free_2d_pointer(char *ptr_2D[]);
-int		ft_fork_child_proc_to_exec_cmd(char const *cmd, int infd);
-int		ft_get_here_doc(char const *limiter);
-void	ft_pipex_here_doc(int args_count, char const **args);
-void	ft_pipex_multiple_pipes(int args_count, char const **args);
-void	ft_pipex(int argc, char const **argv);
+int		ft_fork_child_proc_to_exec_cmd(char **envp, char *cmd, int infd);
+int		ft_get_here_doc(char *limiter);
+void	ft_pipex_here_doc(int args_count, char **args, char **envp);
+void	ft_pipex_multiple_pipes(int args_count, char **args, char **envp);
+void	ft_pipex(int argc, char **argv, char **envp);
 void	ft_perror_then_exit(char const *str_error);
 
 #endif
